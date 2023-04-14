@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import app from "../../firebase/firebase.config";
 import { Link } from "react-router-dom";
@@ -27,6 +28,8 @@ const Register = () => {
     // 2. collect form data
     const email = event.target.email.value;
     const password = event.target.password.value;
+    const name = event.target.name.value;
+    console.log(name, email, password);
 
     // validate
     if (!/(?=.*[A-Z]) /.test(password)) {
@@ -50,6 +53,7 @@ const Register = () => {
         event.target.reset();
         setSuccess("User has been created successfully");
         sendVerificationEmail(result.user);
+        updateUserData(result.user, name);
         console.log(loggedUser);
       })
       .catch((error) => {
@@ -66,6 +70,18 @@ const Register = () => {
     });
   };
 
+  const updateUserData = (user, name) => {
+    updateProfile(user, {
+      displayName: name,
+    })
+      .then(() => {
+        console.log("User name updated");
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
+
   const handlePasswordBlur = (event) => {
     // console.log(event.target.value);
   };
@@ -73,6 +89,15 @@ const Register = () => {
     <div className="w-50 mx-auto">
       <h2>Please Register</h2>
       <form onSubmit={handleSubmit}>
+        <input
+          className="w-50 mb-4 rounded p-2"
+          required
+          type="text"
+          name="name"
+          id="name"
+          placeholder="Your Name"
+        />
+        <br />
         <input
           className="w-50 mb-4 rounded p-2"
           onChange={handleEmailChange}

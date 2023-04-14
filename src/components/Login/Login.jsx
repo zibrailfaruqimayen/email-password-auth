@@ -55,6 +55,7 @@ const Login = () => {
     const email = emailRef.current.value;
     if (!email) {
       alert("Please provied your email address to reset password");
+      return;
     }
     sendPasswordResetEmail(auth, email)
       .then(() => {
@@ -62,6 +63,7 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
+        setError(error.message);
       });
   };
 
